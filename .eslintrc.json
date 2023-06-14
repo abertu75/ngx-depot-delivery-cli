@@ -1,0 +1,107 @@
+{
+  "root": true,
+  "ignorePatterns": ["projects/**/*"],
+  "overrides": [
+    {
+      "files": ["*.ts"],
+      "parserOptions": {
+        "project": ["tsconfig.json", "e2e/tsconfig.json"],
+        "createDefaultProgram": true
+      },
+      "extends": [
+        "plugin:@angular-eslint/recommended",
+        "plugin:@angular-eslint/template/process-inline-templates",
+        "plugin:prettier/recommended"
+      ],
+      "rules": {
+        "@angular-eslint/prefer-on-push-component-change-detection": "warn"
+      }
+    },
+    // NOTE: WE ARE NOT APPLYING PRETTIER IN THIS OVERRIDE, ONLY @ANGULAR-ESLINT/TEMPLATE
+    {
+      "files": ["*.html"],
+      "extends": ["plugin:@angular-eslint/template/recommended"],
+      "rules": {
+        "@angular-eslint/template/use-track-by-function": "warn",
+        "@angular-eslint/template/conditional-complexity": "error",
+        "@angular-eslint/template/cyclomatic-complexity": "error",
+        "@angular-eslint/template/eqeqeq": "error",
+        "@angular-eslint/template/no-call-expression": "error",
+        "@angular-eslint/template/no-duplicate-attributes": "error",
+        "@angular-eslint/template/no-negated-async": "error"
+      }
+    },
+    // NOTE: WE ARE NOT APPLYING @ANGULAR-ESLINT/TEMPLATE IN THIS OVERRIDE, ONLY PRETTIER
+    {
+      "files": ["*.html"],
+      "excludedFiles": ["*inline-template-*.component.html"],
+      "extends": ["plugin:prettier/recommended"],
+      "rules": {
+        // NOTE: WE ARE OVERRIDING THE DEFAULT CONFIG TO ALWAYS SET THE PARSER TO ANGULAR (SEE BELOW)
+        "prettier/prettier": ["error", { "parser": "angular" }]
+      }
+    },
+    // NOTE: NGRX PARSER
+    {
+      "files": ["*.ts"],
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "ecmaVersion": 2019,
+        "project": "./tsconfig.json",
+        "sourceType": "module"
+      },
+      "extends": [
+        "plugin:ngrx/recommended",
+        "plugin:@typescript-eslint/recommended"
+      ],
+      "rules": {
+        "no-magic-numbers": "off",
+        "@typescript-eslint/no-magic-numbers": [
+          "error",
+          {
+            "ignore": [-1, 0, 0.5, 1, 2, 100],
+            "ignoreArrayIndexes": true,
+            "enforceConst": true,
+            "ignoreEnums": true,
+            "ignoreReadonlyClassProperties": true,
+            "ignoreNumericLiteralTypes": true
+          }
+        ],
+        "no-shadow": "off",
+        "@typescript-eslint/no-shadow": "error",
+        "@typescript-eslint/no-unused-vars": [
+          "warn",
+          { "argsIgnorePattern": "_" }
+        ],
+        "no-console": ["warn", { "allow": ["error"] }],
+        "block-scoped-var": "error",
+        "complexity": [2, 20],
+        "default-case": "error",
+        "eqeqeq": ["error", "smart"],
+        "no-eval": "error",
+        "no-implied-eval": "error",
+        "no-extra-bind": "error",
+        "no-lone-blocks": "error",
+        "no-loop-func": "error",
+        "no-param-reassign": "error",
+        "no-self-compare": "error",
+        "no-throw-literal": "error",
+        "no-catch-shadow": "error",
+        "no-use-before-define": "error",
+        "global-require": "error",
+        "handle-callback-err": ["error", "^.*(e|E)rr"],
+        "no-sync": "error",
+        "no-duplicate-imports": "error",
+        "no-var": "error",
+        "prefer-arrow-callback": 1,
+        "prefer-const": [
+          "error",
+          {
+            "destructuring": "all"
+          }
+        ],
+        "prefer-spread": "error"
+      }
+    }
+  ]
+}
