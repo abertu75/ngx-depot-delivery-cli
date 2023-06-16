@@ -2,15 +2,12 @@ import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { ApiService } from '../services/api.service';
-import { Subscription, take } from 'rxjs';
+import { take } from 'rxjs';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Order } from '../models/order';
 import { Package } from '../models/package';
-
-const ORDER_STATES = ["ACCEPTED",
-  "PARTIALLY_DELIVERED",
-  "PAID",
-  "COMPLETED"];
+import { DateTime } from 'luxon';
+import { ORDER_STATES } from '../enums/oders_state';
 
 
 
@@ -36,6 +33,7 @@ export interface ColumnConfig {
 
 
 export class OrderTable {
+  public orderState: ORDER_STATES;
 
   protected columns: ColumnConfig[] = [
     {
@@ -51,17 +49,18 @@ export class OrderTable {
     {
       columnDef: 'date',
       header: 'Order Date',
-      cell: (element: Order) => `${element.date}`,
+      cell: (element: Order) => DateTime.fromISO(element.date).toLocaleString(DateTime.DATETIME_SHORT),
     },
     {
       columnDef: 'stateUpdateDate',
       header: 'Last Update',
-      cell: (element: Order) => `${element.stateUpdateDate}`},
+      cell: (element: Order) => DateTime.fromISO(element.stateUpdateDate).toLocaleString(DateTime.DATETIME_SHORT)
+    }
   ];
 
   protected detailColums: ColumnConfig[] = [
     {
-      columnDef: 'id',
+      columnDef: 'package_id',
       header: 'ID',
       cell: (element: Package) => `${element.id}`,
     },
@@ -81,12 +80,7 @@ export class OrderTable {
       cell: (element: Package) => `${element.weightKg}`
     },
     {
-      columnDef: 'weightKg',
-      header: 'Weight',
-      cell: (element: Package) => `${element.weightKg}`
-    },
-    {
-      columnDef: 'state',
+      columnDef: 'package_state',
       header: 'State',
       cell: (element: Package) => `${element.state}`
     },
@@ -103,12 +97,12 @@ export class OrderTable {
     {
       columnDef: 'description',
       header: 'Description',
-      cell: (element: Package) => `${element.description}`
+      cell: (element: Package) => element.description??''
     }
     ];
 
   columnsToDisplayWithExpand = [...this.columns.map(colConfig=>colConfig.columnDef), 'expand'];
-
+  detailColumnsToDisplay = this.detailColums.map(colConfig=>colConfig.columnDef);
 
   expandedElement: Package[] | null;
  

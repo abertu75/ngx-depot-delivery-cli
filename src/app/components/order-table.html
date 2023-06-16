@@ -27,13 +27,17 @@
   </ng-container>
 
   <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
-  <ng-container matColumnDef="expandedDetail">
+  <ng-container matColumnDef="expandedDetail" >
     <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplayWithExpand.length">
       <div class="example-element-detail" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
 
-        <table mat-table [dataSource]="element.packages">
-          
-          <ng-container matColumnDef="id">
+        <table mat-table [dataSource]="element.packages" >
+          <ng-container [matColumnDef]="columnConfig.columnDef" *ngFor="let columnConfig of detailColums">
+            <th mat-header-cell *matHeaderCellDef > {{columnConfig.header}} </th>
+            <td mat-cell *matCellDef="let element"> {{columnConfig.cell(element)}} </td>
+          </ng-container>
+
+          <!--ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef> ID </th>
             <td mat-cell *matCellDef="let package"> {{package.id}} </td>
           </ng-container>
@@ -65,16 +69,13 @@
           <ng-container matColumnDef="description">
             <th mat-header-cell *matHeaderCellDef> description </th>
             <td mat-cell *matCellDef="let package"> {{package.description}} </td>
-          </ng-container>
-          <!--ng-container matColumnDef="suppl">
-            <th mat-header-cell *matHeaderCellDef> state </th>
-            <td mat-cell *matCellDef="let package"> {{package.state}} </td>
           </ng-container-->
 
+
           <tr mat-header-row
-            *matHeaderRowDef="['id','heightCm','widthCm','weightKg','state','lat','lon','description']"></tr>
+            *matHeaderRowDef="detailColumnsToDisplay"></tr>
           <tr mat-row
-            *matRowDef="let row; columns: ['id','heightCm','widthCm','weightKg','state','lat','lon','description'];">
+            *matRowDef="let row; columns: detailColumnsToDisplay;">
           </tr>
         </table>
       </div>
